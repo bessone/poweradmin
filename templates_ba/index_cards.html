@@ -1,0 +1,182 @@
+<h5 class="mb-3">{% trans %}Welcome{% endtrans %} {{ user_name }}</h5>
+<div class="row">
+    {% if permissions['search'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=search" data-testid="search-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-search display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Search zones and records{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['zone_content_view_own'] or permissions['zone_content_view_others'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=list_zones" data-testid="list-zones-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-diagram-3 display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}List zones{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+
+    {% if permissions['zone_master_add'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=list_zone_templ" data-testid="list-zone-templates-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-files display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}List zone templates{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['supermaster_view'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=list_supermasters" data-testid="list-zone-templates-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-hdd-rack display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}List supermasters{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['zone_master_add'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=add_zone_master" data-testid="add-master-zone-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-hdd-rack display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Add master zone{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['zone_slave_add'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=add_zone_slave" data-testid="add-master-zone-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-plus-circle-dotted display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Add slave zone{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['supermaster_add'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=add_supermaster" data-testid="add-supermaster-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-hdd-network display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Add supermaster{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['zone_master_add'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=bulk_registration" data-testid="add-supermaster-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-collection display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Bulk registration{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if permissions['user_is_ueberuser'] and dblog_use == true %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=list_log_zones" data-testid="zone-logs-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-list-ul display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Zone logs{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    {% if auth_used != "ldap" %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=change_password" data-testid="change-password-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-key display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Change password{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=users" data-testid="user-administration-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-people display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}User administration{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% if permissions['templ_perm_edit'] %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=list_perm_templ" data-testid="list-permission-templates-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-person-lock display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}List permission templates{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=logout" data-testid="logout-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-box-arrow-right display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}Logout{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
