@@ -60,8 +60,9 @@ class AppManager
     {
         $this->configuration = new AppConfiguration();
 
-        $templates = $this->config('iface_templates');
-        $loader = new FilesystemLoader($templates);
+        $iface_templates = $this->config('iface_templates');
+
+        $loader = new FilesystemLoader($iface_templates);
         $this->templateRenderer = new Environment($loader, ['debug' => false]);
 
         if ($this->config('display_stats')) {
