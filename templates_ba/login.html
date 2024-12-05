@@ -1,0 +1,54 @@
+<style>
+.form-signin {
+  max-width: 400px;
+  padding: 1rem;
+}
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+.content {
+    height: 100% !important;
+}
+.content > .container-fluid {
+    display: flex !important;
+}
+</style>
+
+<main class="form-signin w-100 m-auto">
+    {% if msg %}
+    <div data-testid="session-error" class="alert alert-{{ type }} alert-dismissible fade show" role="alert">{{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    <form class="needs-validation" method="post" action="index.php" novalidate>
+        <img class="mb-4" src="/assets/logo.png" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">{% trans %}Log in{% endtrans %}</h1>
+        <input type="hidden" name="_token" value="{{ login_token }}">
+        <input type="hidden" name="query_string" value="{{ query_string }}">
+
+        <div class="form-floating mb-2">
+            <input type="text" data-testid="username-input" class="form-control" id="username" name="username" required autofocus>
+            <label for="username" class="form-label">{% trans %}Username{% endtrans %}</label>
+            <div data-testid="username-error" class="invalid-feedback">{% trans %}Please provide a username{% endtrans %}</div>
+        </div>
+        <div class="input-group mb-2">
+            <div class="form-floating">
+                <input type="password" data-testid="password-input" class="form-control" id="password" name="password" required>
+                <label for="password" class="form-label">{% trans %}Password{% endtrans %}</label>
+                <div data-testid="password-error" class="invalid-feedback">{% trans %}Please provide a password{% endtrans %}</div>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" type="button" onclick="showPassword('password', 'eye')"><i class="bi bi-eye-fill" id="eye"></i></button>
+        </div>
+        {% if show_language_selector %}
+        <div class="form-floating mb-2">
+            <select class="form-select" id="language" name="userlang">
+                {{ locale_options | raw }}
+            </select>
+            <label for="language" class="form-label">{% trans %}Language{% endtrans %}</label>
+        </div>
+        {% endif %}
+        <div>
+            <input type="submit" data-testid="login-button" name="authenticate" class="w-100 btn btn-lg btn-primary" value=" {% trans %}Go{% endtrans %} ">
+        </div>
+    </form>
+</main>
