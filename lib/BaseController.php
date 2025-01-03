@@ -291,11 +291,13 @@ EOF;
         $style = $this->app->config('iface_style');
         $themeManager = new ThemeManager($style);
 
+        $iface_theme = $this->config('iface_theme') ?? 'default';
+
         $vars = [
             'iface_title' => $this->app->config('iface_title'),
             'iface_style' => $themeManager->getSelectedTheme(),
             'file_version' => time(),
-            'custom_header' => file_exists('templates/custom/header.html'),
+            'custom_header' => file_exists('templates/' . $iface_theme . '/custom/header.html'),
             'install_error' => file_exists('install') ? _('The <a href="install/">install/</a> directory exists, you must remove it first before proceeding.') : false,
         ];
 
@@ -335,11 +337,13 @@ EOF;
         $themeManager = new ThemeManager($style);
         $selected_theme = $themeManager->getSelectedTheme();
 
+        $iface_theme = $this->config('iface_theme') ?? 'default';
+
         $display_stats = $this->app->config('display_stats');
 
         $this->app->render('footer.html', [
             'version' => isset($_SESSION["userid"]) ? Version::VERSION : false,
-            'custom_footer' => file_exists('templates/custom/footer.html'),
+            'custom_footer' => file_exists('templates/' . $iface_theme . '/custom/footer.html'),
             'display_stats' => $display_stats ? $this->app->displayStats() : false,
             'db_queries' => $this->app->config('db_debug') ? $this->db->getQueries() : false, // FIXME
             'show_theme_switcher' => in_array($selected_theme, ['ignite', 'spark']),
