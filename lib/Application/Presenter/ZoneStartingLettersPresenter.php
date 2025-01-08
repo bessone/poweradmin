@@ -26,7 +26,7 @@ class ZoneStartingLettersPresenter {
     public function present(array $availableChars, bool $digitsAvailable, string $letterStart): string {
         $html = '<span class="text-secondary">' . _('Show zones beginning with') . "</span><br>";
         $html .= '<nav>';
-        $html .= '<ul class="pagination pagination-sm">';
+        $html .= '<ul class="pagination d-flex flex-wrap">';
 
         if ($letterStart === "1") {
             $html .= '<li class="page-item active"><span class="page-link" tabindex="-1">0-9</span></li>';
