@@ -13,352 +13,408 @@
     </ol>
 </nav>
 
-{% if idn_zone_name %}
-<h5 class="mb-3">{% trans %}Edit zone{% endtrans %} "{{ idn_zone_name }}" ({{ zone_name_to_display }})</h5>
-{% else %}
-<h5 class="mb-3">{% trans %}Edit zone{% endtrans %} "{{ zone_name_to_display }}"</h5>
-{% endif %}
-
-<div>
-    {{ pagination | raw }}
-</div>
-
-{% if not records %}
-<table class="table table-striped table-hover table-sm">
-    <tr>
-        <td>{% trans %}This zone does not have any records.{% endtrans %}</td>
-    </tr>
-</table>
-<hr>
-{% else %}
-
-{% if (perm_edit == "all" or (perm_edit == "own" or perm_edit == "own_as_client") and user_is_zone_owner == "1") and domain_type != "SLAVE" and iface_edit_add_record_top %}
-<form class="needs-validation" method="post" action="index.php?page=add_record&id={{ zone_id }}" novalidate>
-    <input type="hidden" name="_token" value="{{ csrf_token }}">
-    <input type="hidden" name="domain" value="{{ zone_id }}">
-    <table class="table table-striped table-hover table-sm">
-        <tr>
-            {% if iface_edit_show_id %}
-            <th>&nbsp;</th>
-            {% endif %}
-            <th>{% trans %}Name{% endtrans %}</th>
-            <th>{% trans %}Type{% endtrans %}</th>
-            <th>{% trans %}Content{% endtrans %}</th>
-            <th>{% trans %}Priority{% endtrans %}</th>
-            <th>{% trans %}TTL{% endtrans %}</th>
-            <th class="text-center">
-                {% if not is_reverse_zone and iface_add_reverse_record %}
-                    {% trans %}Add PTR{% endtrans %}
-                {% endif %}
-                {% if is_reverse_zone and iface_add_domain_record %}
-                    {% trans %}Add A/AAAA{% endtrans %}
-                {% endif %}
-            </th>
-            <th></th>
-        </tr>
-        <tr>
-            {% if iface_edit_show_id %}
-            <td>&nbsp;</td>
-            {% endif %}
-            <td class="col-sm-2">
-                <input class="form-control form-control-sm" type="text" name="name" value="">
-            </td>
-            <td class="col-sm-1">
-                <select id="recordTypeSelectTop" class="form-select form-select-sm" name="type" onchange="updateContentInput('recordTypeSelectTop', 'contentInputContainerTop', 'recordContentTop')">
-                    {% set rev = false %}
-                    {% for record_type in record_types %}
-                    {% set add = "" %}
-                    {% if is_reverse_zone and record_type == "PTR" %}
-                    {% set add = "SELECTED" %}
-                    {% endif %}
-
-                    {% if iface_add_reverse_record and record_type == "A" %}
-                    {% set add = "SELECTED" %}
-                    {% set rev = true %}
-                    {% endif %}
-                    <option {{ add }} value="{{ record_type }}">{{ record_type }}</option>
-                    {% endfor %}
-                </select>
-            </td>
-            <td>
-                <div id="contentInputContainerTop">
-                    <input id="recordContentTop" class="form-control form-control-sm" type="text" name="content" value="" required>
-                </div>
-                <div class="invalid-feedback">{% trans %}Provide content{% endtrans %}</div>
-            </td>
-            <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="prio" value="0"
-                                        min="0" max="65535" pattern="[0-9]*"></td>
-            <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="ttl"
-                                        min="0" max="2147483647" pattern="[0-9]*" value="{{ dns_ttl }}" required>
-                <div class="invalid-feedback">{% trans %}Provide TTL{% endtrans %}</div>
-            </td>
-            <td class="col-sm-1 text-center">
-                {% if not is_reverse_zone and iface_add_reverse_record %}
-                <span class="align-middle">
-                    <input class="form-check-input" type="checkbox" name="reverse">
-                </span>
-                {% endif %}
-                {% if is_reverse_zone and iface_add_domain_record %}
-                <span class="align-middle">
-                    <input class="form-check-input" type="checkbox" name="create_domain_record">
-                </span>
-                {% endif %}
-            </td>
-            <td class="col-sm-1">
-                <input class="btn btn-outline-secondary btn-sm" type="submit" name="commit"
-                       value="{% trans %}Add record{% endtrans %}">
-            </td>
-        </tr>
-    </table>
-</form>
-<hr>
-{% endif %}
-
-<form class="needs-validation" method="post" action="" novalidate>
-    <input type="hidden" name="_token" value="{{ csrf_token }}">
-    <input type="hidden" name="serial" value="{{ serial }}">
-    <table class="table table-striped table-hover table-sm">
-        <tr>
-            {% if iface_edit_show_id %}
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=id&sort_direction={{ record_sort_by == 'id' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}Id{% endtrans %}
-                </a>
-                {% if record_sort_by == 'id' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            {% endif %}
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=name&sort_direction={{ record_sort_by == 'name' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}Name{% endtrans %}
-                </a>
-                {% if record_sort_by == 'name' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=type&sort_direction={{ record_sort_by == 'type' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}Type{% endtrans %}
-                </a>
-                {% if record_sort_by == 'type' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=content&sort_direction={{ record_sort_by == 'content' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}Content{% endtrans %}
-                </a>
-                {% if record_sort_by == 'content' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=prio&sort_direction={{ record_sort_by == 'prio' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}Priority{% endtrans %}
-                </a>
-                {% if record_sort_by == 'prio' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=ttl&sort_direction={{ record_sort_by == 'ttl' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}TTL{% endtrans %}
-                </a>
-                {% if record_sort_by == 'ttl' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            <th>
-                <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=disabled&sort_direction={{ record_sort_by == 'disabled' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
-                    {% trans %}Disabled{% endtrans %}
-                </a>
-                {% if record_sort_by == 'disabled' %}
-                    <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
-                {% endif %}
-            </th>
-            <th>&nbsp;</th>
-        </tr>
-        {% for r in records %}
-
-        {% if not(r['type'] == "SOA" or (r['type'] == "NS" and perm_edit == "own_as_client")) %}
-        <input type="hidden" name="record[{{ r['id'] }}][rid]" value="{{ r['id'] }}">
-        <input type="hidden" name="record[{{ r['id'] }}][zid]" value="{{ zone_id }}">
+<div class="card">
+    <div class="card-header">
+        <div class="float-start">
+        {% if idn_zone_name %}
+        <h5>{% trans %}Edit zone{% endtrans %} "{{ idn_zone_name }}" ({{ zone_name_to_display }})</h5>
+        {% else %}
+        <h5>{% trans %}Edit zone{% endtrans %} "{{ zone_name_to_display }}"</h5>
         {% endif %}
-        <tr>
-            {% if iface_edit_show_id %}
-            <td>{{ r['id'] }}</td>
-            {% endif %}
-            {% if r['type'] == "SOA" or r['type'] == "NS" and perm_edit == "own_as_client" %}
-            <td class="col-sm-2">{{ r['name'] }}</td>
-            <td class="col-sm-1">{{ r['type'] }}</td>
-            <td>{{ r['content'] }}</td>
-            <td>&nbsp;</td>
-            <td class="col-sm-1">{{ r['ttl'] }}</td>
-            <td>&nbsp;</td>
-            {% else %}
-            <td class="col-sm-2"><input class="form-control form-control-sm" type="text"
-                                        name="record[{{ r['id'] }}][name]" value="{{ r['name'] }}"></td>
-            <td class="col-sm-1">
-                <select id="recordTypeSelect{{ r['id'] }}" class="form-select form-select-sm" name="record[{{ r['id'] }}][type]" onchange="updateContentInput('recordTypeSelect{{ r['id'] }}', 'contentInputContainer{{ r['id'] }}', 'recordContent{{ r['id'] }}')">
-                    {% set found_selected_type = false %}
-                    {% for type_available in types %}
-                    {% if type_available == r['type'] %}
-                    {% set add = "SELECTED" %}
-                    {% set found_selected_type = true %}
+        </div>
+
+
+        <div class="dropdown float-end">
+            <i class="bi bi-three-dots-vertical btn btn-link text-body" data-bs-toggle="dropdown" aria-expanded="false"></i>
+            <div class="dropdown-menu">
+                {% if (perm_edit == "all" or (perm_edit == "own" or perm_edit == "own_as_client") and user_is_zone_owner == "1") and domain_type != "SLAVE" %}
+                <a class="dropdown-item" href="index.php?page=add_record&id={{ zone_id }}" title="{% trans %}Add record{% endtrans %}">
+                    <i class="bi bi-plus-circle text-primary"></i> {% trans %}Add record{% endtrans %}
+                </a>
+                {% endif %}
+                {% if perm_edit == "all" or (perm_edit == "own" and user_is_zone_owner) %}
+                <a class="dropdown-item" href="index.php?page=delete_domain&id={{ zone_id }}" title="{% trans %}Delete{% endtrans %}">
+                    <i class="bi bi-trash text-danger"></i> {% trans %}Delete{% endtrans %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div>
+            {{ pagination | raw }}
+        </div>
+
+        {% if not records %}
+        <table class="table table-striped table-hover table-sm">
+            <tr>
+                <td>{% trans %}This zone does not have any records.{% endtrans %}</td>
+            </tr>
+        </table>
+        <hr>
+        {% else %}
+
+        {% if (perm_edit == "all" or (perm_edit == "own" or perm_edit == "own_as_client") and user_is_zone_owner == "1") and domain_type != "SLAVE" and iface_edit_add_record_top %}
+        <form class="needs-validation" method="post" action="index.php?page=add_record&id={{ zone_id }}" novalidate>
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <input type="hidden" name="domain" value="{{ zone_id }}">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    {% if iface_edit_show_id %}
+                    <th>&nbsp;</th>
+                    {% endif %}
+                    <th>{% trans %}Name{% endtrans %}</th>
+                    <th>{% trans %}Type{% endtrans %}</th>
+                    <th>{% trans %}Content{% endtrans %}</th>
+                    <th>{% trans %}Priority{% endtrans %}</th>
+                    <th>{% trans %}TTL{% endtrans %}</th>
+                    <th class="text-center">
+                        {% if not is_reverse_zone and iface_add_reverse_record %}
+                            {% trans %}Add PTR{% endtrans %}
+                        {% endif %}
+                        {% if is_reverse_zone and iface_add_domain_record %}
+                            {% trans %}Add A/AAAA{% endtrans %}
+                        {% endif %}
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    {% if iface_edit_show_id %}
+                    <td>&nbsp;</td>
+                    {% endif %}
+                    <td class="col-sm-2">
+                        <input class="form-control form-control-sm" type="text" name="name" value="">
+                    </td>
+                    <td class="col-sm-1">
+                        <select id="recordTypeSelectTop" class="form-select form-select-sm" name="type" onchange="updateContentInput('recordTypeSelectTop', 'contentInputContainerTop', 'recordContentTop')">
+                            {% set rev = false %}
+                            {% for record_type in record_types %}
+                            {% set add = "" %}
+                            {% if is_reverse_zone and record_type == "PTR" %}
+                            {% set add = "SELECTED" %}
+                            {% endif %}
+
+                            {% if iface_add_reverse_record and record_type == "A" %}
+                            {% set add = "SELECTED" %}
+                            {% set rev = true %}
+                            {% endif %}
+                            <option {{ add }} value="{{ record_type }}">{{ record_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <div id="contentInputContainerTop">
+                            <input id="recordContentTop" class="form-control form-control-sm" type="text" name="content" value="" required>
+                        </div>
+                        <div class="invalid-feedback">{% trans %}Provide content{% endtrans %}</div>
+                    </td>
+                    <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="prio" value="0"
+                                                min="0" max="65535" pattern="[0-9]*"></td>
+                    <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="ttl"
+                                                min="0" max="2147483647" pattern="[0-9]*" value="{{ dns_ttl }}" required>
+                        <div class="invalid-feedback">{% trans %}Provide TTL{% endtrans %}</div>
+                    </td>
+                    <td class="col-sm-1 text-center">
+                        {% if not is_reverse_zone and iface_add_reverse_record %}
+                        <span class="align-middle">
+                            <input class="form-check-input" type="checkbox" name="reverse">
+                        </span>
+                        {% endif %}
+                        {% if is_reverse_zone and iface_add_domain_record %}
+                        <span class="align-middle">
+                            <input class="form-check-input" type="checkbox" name="create_domain_record">
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="col-sm-1">
+                        <input class="btn btn-outline-secondary btn-sm" type="submit" name="commit"
+                            value="{% trans %}Add record{% endtrans %}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+        <hr>
+        {% endif %}
+
+        <form class="needs-validation" method="post" action="" novalidate>
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <input type="hidden" name="serial" value="{{ serial }}">
+            <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    {% if iface_edit_show_id %}
+                    <th>
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=id&sort_direction={{ record_sort_by == 'id' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}Id{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'id' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    {% endif %}
+                    <th>
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=name&sort_direction={{ record_sort_by == 'name' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}Name{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'name' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    <th>
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=type&sort_direction={{ record_sort_by == 'type' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}Type{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'type' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    <th>
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=content&sort_direction={{ record_sort_by == 'content' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}Content{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'content' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    <th>
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=prio&sort_direction={{ record_sort_by == 'prio' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}Priority{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'prio' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    <th class="text-end">
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=ttl&sort_direction={{ record_sort_by == 'ttl' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}TTL{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'ttl' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    <th>
+                        <a href="index.php?page=edit&id={{ zone_id }}&record_sort_by=disabled&sort_direction={{ record_sort_by == 'disabled' and sort_direction == 'ASC' ? 'DESC' : 'ASC' }}">
+                            {% trans %}Disabled{% endtrans %}
+                        </a>
+                        {% if record_sort_by == 'disabled' %}
+                            <i class="bi bi-arrow-{{ sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
+                        {% endif %}
+                    </th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for r in records %}
+
+                {% if not(r['type'] == "SOA" or (r['type'] == "NS" and perm_edit == "own_as_client")) %}
+                <input type="hidden" name="record[{{ r['id'] }}][rid]" value="{{ r['id'] }}">
+                <input type="hidden" name="record[{{ r['id'] }}][zid]" value="{{ zone_id }}">
+                {% endif %}
+                <tr>
+                    {% if iface_edit_show_id %}
+                    <td>{{ r['id'] }}</td>
+                    {% endif %}
+                    {% if r['type'] == "SOA" or r['type'] == "NS" and perm_edit == "own_as_client" %}
+                    <td class="col-sm-2">{{ r['name'] }}</td>
+                    <td class="col-sm-1">{{ r['type'] }}</td>
+                    <td>{{ r['content'] }}</td>
+                    <td>&nbsp;</td>
+                    <td class="col-sm-1 text-end">{{ r['ttl'] }}</td>
+                    <td>&nbsp;</td>
                     {% else %}
-                    {% set add = "" %}
+                    <td class="col-sm-2">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-sm" name="record[{{ r['id'] }}][name]" value="{{ r['name']|replace({(zone_name) : ''})|trim('.') }}">
+                            <span class="input-group-text">.{{ idn_zone_name ?: zone_name }}</span>
+                        </div>
+                    </td>
+                    <td class="col-sm-1">
+                        <select id="recordTypeSelect{{ r['id'] }}" class="form-select form-select-sm" name="record[{{ r['id'] }}][type]" onchange="updateContentInput('recordTypeSelect{{ r['id'] }}', 'contentInputContainer{{ r['id'] }}', 'recordContent{{ r['id'] }}')">
+                            {% set found_selected_type = false %}
+                            {% for type_available in types %}
+                            {% if type_available == r['type'] %}
+                            {% set add = "SELECTED" %}
+                            {% set found_selected_type = true %}
+                            {% else %}
+                            {% set add = "" %}
+                            {% endif %}
+                            <option {{ add }} value="{{ type_available }}">{{ type_available }}</option>
+                            {% endfor %}
+                            {% if not found_selected_type %}
+                            <option selected value="{{ r['type'] }}">{{ r['type'] }}</option>
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td>
+                        <div id="contentInputContainer{{ r['id'] }}">
+                            <input id="recordContent{{ r['id'] }}" class="form-control form-control-sm" type="text" name="record[{{ r['id'] }}][content]" value="{{ r['content'] }}">
+                        </div>
+                    </td>
+                    <td class="col-sm-1 text-end">
+                        <input class="form-control form-control-sm text-end" type="number"
+                                                id="priority_field_{{ r['id'] }}" name="record[{{ r['id'] }}][prio]"
+                                                min="0" max="65535" pattern="[0-9]*" value="{{ r['prio'] }}">
+                    </td>
+                    <td class="col-sm-1 text-end">
+                        <input class="form-control form-control-sm text-end" type="text"
+                                                min="0" max="2147483647" pattern="[0-9]*" name="record[{{ r['id'] }}][ttl]"
+                                                value="{{ r['ttl'] }}">
+                    </td>
+                    <td class="text-center">
+                        <input class="form-check-input" type="checkbox" name="record[{{ r['id'] }}][disabled]" {% if r['disabled'] == 1 %}checked{% endif %}>
+                    </td>
                     {% endif %}
-                    <option {{ add }} value="{{ type_available }}">{{ type_available }}</option>
-                    {% endfor %}
-                    {% if not found_selected_type %}
-                    <option selected value="{{ r['type'] }}">{{ r['type'] }}</option>
+
+                    {% if domain_type == "SLAVE" or perm_edit == "none" or (perm_edit == "own" or perm_edit == "own_as_client") and user_is_zone_owner == "0" %}
+                    <td>&nbsp;</td>
+                    {% elseif r['type'] == "SOA" and perm_edit != "all" or r['type'] == "NS" and perm_edit == "own_as_client" %}
+                    <td>&nbsp;</td>
+                    {% else %}
+                    <td class="col-sm-2 text-end">
+                        <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_record&id={{ r['id'] }}&domain={{ zone_id }}">
+                            <i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}
+                        </a>
+                        <a class="btn btn-outline-danger btn-sm" href="index.php?page=delete_record&id={{ r['id'] }}&domain={{ zone_id }}">
+                            <i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}
+                        </a>
+                    </td>
                     {% endif %}
-                </select>
-            </td>
-            <td>
-                <div id="contentInputContainer{{ r['id'] }}">
-                    <input id="recordContent{{ r['id'] }}" class="form-control form-control-sm" type="text" name="record[{{ r['id'] }}][content]" value="{{ r['content'] }}">
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if iface_zone_comments %}
+            <div class="row">
+                <div class="col">
+                    <label for="comment">Comments</label>
+                    <textarea class="form-control form-control-sm" rows="5" cols="80" name="comment">{{ zone_comment }}</textarea>
                 </div>
-            </td>
-            <td class="col-sm-1"><input class="form-control form-control-sm" type="number"
-                                        id="priority_field_{{ r['id'] }}" name="record[{{ r['id'] }}][prio]"
-                                        min="0" max="65535" pattern="[0-9]*" value="{{ r['prio'] }}"></td>
-            <td class="col-sm-1"><input class="form-control form-control-sm" type="text"
-                                        min="0" max="2147483647" pattern="[0-9]*" name="record[{{ r['id'] }}][ttl]"
-                                        value="{{ r['ttl'] }}"></td>
-            <td class="text-center">
-                <input class="form-check-input" type="checkbox" name="record[{{ r['id'] }}][disabled]" {% if r['disabled'] == 1 %}checked{% endif %}>
-            </td>
+                <div class="col-auto align-self-end">
+                    <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_comment&id={{ zone_id }}">
+                        <i class="bi bi-pencil-square"></i> {% trans %}Edit comment{% endtrans %}
+                    </a>
+                </div>
+            </div>
             {% endif %}
+            <div class="mt-3">
+                {% if perm_edit != "none" %}
+                <button class="btn btn-primary btn-sm" type="submit" name="commit">
+                    <i class="bi bi-floppy"></i> {% trans %}Update{% endtrans %}
+                </button>
+                <button class="btn btn-secondary btn-sm" type="reset" name="reset">
+                    <i class="bi bi-arrow-counterclockwise"></i> {% trans %}Reset{% endtrans %}
+                </button>
+                {% endif %}
 
-            {% if domain_type == "SLAVE" or perm_edit == "none" or (perm_edit == "own" or perm_edit ==
-            "own_as_client") and user_is_zone_owner == "0" %}
-            <td>&nbsp;</td>
-            {% elseif r['type'] == "SOA" and perm_edit != "all" or r['type'] == "NS" and perm_edit ==
-            "own_as_client" %}
-            <td>&nbsp;</td>
-            {% else %}
-            <td class="col-sm-2">
-                <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_record&id={{ r['id'] }}&domain={{ zone_id }}">
-                    <i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
-                <a class="btn btn-outline-danger btn-sm" href="index.php?page=delete_record&id={{ r['id'] }}&domain={{ zone_id }}">
-                    <i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
-            </td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-
-        {% if iface_zone_comments %}
-        <tr>
-            {% if iface_edit_show_id %}
-            <td></td>
-            {% endif %}
-            <td colspan="7">{% trans %}Comments{% endtrans %}:</td>
-        </tr>
-        <tr>
-            {% if iface_edit_show_id %}
-            <td></td>
-            {% endif %}
-            <td colspan="6"><textarea class="form-control form-control-sm" rows="5" cols="80" name="comment">{{ zone_comment }}</textarea>
-            </td>
-            <td colspan="2">
-                <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_comment&id={{ zone_id }}">
-                    <i class="bi bi-pencil-square"></i> {% trans %}Edit comment{% endtrans %}</a>
-            </td>
-        <tr>
-            {% endif %}
-    </table>
-
-    {% if perm_edit != "none" %}
-    <input class="btn btn-primary btn-sm" type="submit" name="commit" value="{% trans %}Update{% endtrans %}">
-    <input class="btn btn-secondary btn-sm" type="reset" name="reset" value="{% trans %}Reset{% endtrans %}">
-    {% endif %}
-
-    {% if pdnssec_use %}
-    {% if is_secured %}
-    <input class="btn btn-secondary btn-sm" type="button" name="dnssec"
-           onclick="location.href = 'index.php?page=dnssec&id={{ zone_id }}'" value="{% trans %}DNSSEC{% endtrans %}">
-    <input class="btn btn-secondary btn-sm" type="submit" name="unsign_zone"
-           value="{% trans %}Unsign this zone{% endtrans %}">
-    {% else %}
-    <input class="btn btn-secondary btn-sm" type="submit" name="sign_zone"
-           value="{% trans %}Sign this zone{% endtrans %}">
-    {% endif %}
-    {% endif %}
-</form>
-<hr>
+                {% if pdnssec_use %}
+                {% if is_secured %}
+                <a class="btn btn-success btn-sm" href="index.php?page=dnssec&id={{ zone_id }}">
+                    <i class="bi bi-lock-fill"></i> {% trans %}DNSSEC{% endtrans %}
+                </a>
+                <button class="btn btn-danger btn-sm" type="submit" name="unsign_zone">
+                    <i class="bi bi-unlock-fill"></i> {% trans %}Unsign this zone{% endtrans %}
+                </button>
+                {% else %}
+                <button class="btn btn-success btn-sm" type="submit" name="sign_zone">
+                    <i class="bi bi-lock-fill"></i> {% trans %}Sign this zone{% endtrans %}
+                </button>
+                {% endif %}
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
 {% endif %}
 
 {% if perm_edit == "all" or (perm_edit == "own" or perm_edit == "own_as_client") and user_is_zone_owner == "1" %}
 {% if domain_type != "SLAVE" and not iface_edit_add_record_top %}
-<form class="needs-validation" method="post" action="index.php?page=add_record&id={{ zone_id }}" novalidate>
-    <input type="hidden" name="_token" value="{{ csrf_token }}">
-    <input type="hidden" name="domain" value="{{ zone_id }}">
-    <table class="table table-striped table-hover table-sm">
-        <tr>
-            <th>{% trans %}Name{% endtrans %}</th>
-            <th>&nbsp;</th>
-            <th>{% trans %}Type{% endtrans %}</th>
-            <th>{% trans %}Content{% endtrans %}</th>
-            <th>{% trans %}Priority{% endtrans %}</th>
-            <th>{% trans %}TTL{% endtrans %}</th>
-        </tr>
-        <tr>
-            <td class="col-sm-2"><input class="form-control form-control-sm" type="text" name="name" value="" data-testid="record-name-input">.{{
-                idn_zone_name ?: zone_name }}
-            </td>
-            <td>IN</td>
-            <td class="col-sm-1">
-                <select id="recordTypeSelectBottom"  class="form-select form-select-sm" name="type" onchange="updateContentInput('recordTypeSelectBottom', 'contentInputContainerBottom', 'recordContentBottom')">
-                    {% set rev = false %}
-                    {% for record_type in record_types %}
-                    {% set add = "" %}
-                    {% if is_reverse_zone and record_type == "PTR" %}
-                    {% set add = "SELECTED" %}
-                    {% endif %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>{% trans %}Add record{% endtrans %}</h5>
+    </div>
+    <div class="card-body">
+        <form class="needs-validation" method="post" action="index.php?page=add_record&id={{ zone_id }}" novalidate>
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <input type="hidden" name="domain" value="{{ zone_id }}">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    <th>{% trans %}Name{% endtrans %}</th>
+                    <th>&nbsp;</th>
+                    <th>{% trans %}Type{% endtrans %}</th>
+                    <th>{% trans %}Content{% endtrans %}</th>
+                    <th>{% trans %}Priority{% endtrans %}</th>
+                    <th>{% trans %}TTL{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="col-sm-2">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-sm" name="name" value="" data-testid="record-name-input">
+                            <span class="input-group-text">.{{ idn_zone_name ?: zone_name }}</span>
+                        </div>
+                    </td>
+                    <td>IN</td>
+                    <td class="col-sm-1">
+                        <select id="recordTypeSelectBottom"  class="form-select form-select-sm" name="type" onchange="updateContentInput('recordTypeSelectBottom', 'contentInputContainerBottom', 'recordContentBottom')">
+                            {% set rev = false %}
+                            {% for record_type in record_types %}
+                            {% set add = "" %}
+                            {% if is_reverse_zone and record_type == "PTR" %}
+                            {% set add = "SELECTED" %}
+                            {% endif %}
 
-                    {% if iface_add_reverse_record and record_type == "A" %}
-                    {% set add = "SELECTED" %}
-                    {% set rev = true %}
-                    {% endif %}
-                    <option {{ add }} value="{{ record_type }}">{{ record_type }}</option>
-                    {% endfor %}
-                </select>
-            </td>
-            <td>
-                <div id="contentInputContainerBottom">
-                    <input id="recordContentBottom" class="form-control form-control-sm" type="text" name="content" value="" data-testid="record-content-input" required>
-                </div>
-                <div class="invalid-feedback">{% trans %}Provide content{% endtrans %}</div>
-            </td>
-            <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="prio" value="0"
-                                        min="0" max="65535" pattern="[0-9]*"></td>
-            <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="ttl"
-                                        min="0" max="2147483647" pattern="[0-9]*" value="{{ dns_ttl }}" required>
-                <div class="invalid-feedback">{% trans %}Provide TTL{% endtrans %}</div>
-            </td>
-        </tr>
-    </table>
-    <input class="btn btn-outline-secondary btn-sm" type="submit" name="commit"
-           value="{% trans %}Add record{% endtrans %}" data-testid="add-record-button">
+                            {% if iface_add_reverse_record and record_type == "A" %}
+                            {% set add = "SELECTED" %}
+                            {% set rev = true %}
+                            {% endif %}
+                            <option {{ add }} value="{{ record_type }}">{{ record_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <div id="contentInputContainerBottom">
+                            <input id="recordContentBottom" class="form-control form-control-sm" type="text" name="content" value="" data-testid="record-content-input" required>
+                        </div>
+                        <div class="invalid-feedback">{% trans %}Provide content{% endtrans %}</div>
+                    </td>
+                    <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="prio" value="0"
+                                                min="0" max="65535" pattern="[0-9]*"></td>
+                    <td class="col-sm-1"><input class="form-control form-control-sm" type="number" name="ttl"
+                                                min="0" max="2147483647" pattern="[0-9]*" value="{{ dns_ttl }}" required>
+                        <div class="invalid-feedback">{% trans %}Provide TTL{% endtrans %}</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <input class="btn btn-outline-secondary btn-sm" type="submit" name="commit"
+                value="{% trans %}Add record{% endtrans %}" data-testid="add-record-button">
 
-    {% if not is_reverse_zone and iface_add_reverse_record %}
-    <span class="align-middle">
-        &nbsp;
-        <input class="form-check-input" type="checkbox" name="reverse" data-testid="add-reverse-record-checkbox">
-        <span class="text-secondary"> {% trans %}Also add a PTR record in the matching zone{% endtrans %}</span>
-    </span>
-    {% endif %}
-    {% if is_reverse_zone and iface_add_domain_record %}
-    <span class="align-middle">
-        &nbsp;
-        <input class="form-check-input" type="checkbox" name="create_domain_record" data-testid="add-domain-record-checkbox">
-        <span class="text-secondary"> {% trans %}Also add an A/AAAA record in the matching zone{% endtrans %}</span>
-    </span>
-    {% endif %}
-</form>
-<hr>
+            {% if not is_reverse_zone and iface_add_reverse_record %}
+            <span class="align-middle">
+                &nbsp;
+                <input class="form-check-input" type="checkbox" name="reverse" data-testid="add-reverse-record-checkbox">
+                <span class="text-secondary"> {% trans %}Also add a PTR record in the matching zone{% endtrans %}</span>
+            </span>
+            {% endif %}
+            {% if is_reverse_zone and iface_add_domain_record %}
+            <span class="align-middle">
+                &nbsp;
+                <input class="form-check-input" type="checkbox" name="create_domain_record" data-testid="add-domain-record-checkbox">
+                <span class="text-secondary"> {% trans %}Also add an A/AAAA record in the matching zone{% endtrans %}</span>
+            </span>
+            {% endif %}
+        </form>
+    </div>
+</div>
 {% endif %}
 
 <div class="container">

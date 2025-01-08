@@ -6,14 +6,15 @@
     </ol>
 </nav>
 
-<h5 class="mb-3">{% trans %}Bulk registration{% endtrans %}</h5>
-
-<form class="needs-validation" method="post" action="index.php?page=bulk_registration" novalidate>
-    <input type="hidden" name="_token" value="{{ csrf_token }}">
-    <table class="table">
-        <tr>
-            <td>{% trans %}Owner{% endtrans %}:</td>
-            <td>
+<div class="card">
+    <div class="card-header">
+        <h5>{% trans %}Bulk registration{% endtrans %}</h5>
+    </div>
+    <div class="card-body">
+        <form class="needs-validation col-12 col-xxl-4 col-xl-6" method="post" action="index.php?page=bulk_registration" novalidate>
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <div class="mb-3">
+                <label class="form-label">{% trans %}Owner{% endtrans %}</label>
                 <select class="form-select form-select-sm" name="owner">
                     {% for user in users %}
                     {% if user['id'] == userid %}
@@ -23,11 +24,9 @@
                     {% endif %}
                     {% endfor %}
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>{% trans %}Type{% endtrans %}:</td>
-            <td>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans %}Type{% endtrans %}</label>
                 <select class="form-select form-select-sm" name="dom_type">
                     {% for type in available_zone_types %}
                     {% if type == iface_zone_type_default %}
@@ -38,36 +37,27 @@
                     <option value="{{ type }}" {{ selected }}>{{ type | lower }}</option>
                     {% endfor %}
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>{% trans %}Template{% endtrans %}:</td>
-            <td>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans %}Template{% endtrans %}</label>
                 <select class="form-select form-select-sm" name="zone_template">
                     <option value="none">none</option>
                     {% for zone_template in zone_templates %}
                     <option value="{{ zone_template['id'] }}">{{ zone_template['name'] }}</option>
                     {% endfor %}
                 </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{% trans %}Zones{% endtrans %}:</td>
-            <td>
-                <div>{% trans %}Type one domain per line{% endtrans %}:</div>
-                <div>
-                    <textarea class="form-control form-control-sm" name="domains" rows="10" required>{% if failed_domains %}{{ failed_domains | join('\n') }}{% endif %}</textarea>
-                    <div class="invalid-feedback">{% trans %}Provide a domain name(s){% endtrans %}</div>
-                </div>
-            </td>
-        </tr>
-
-        <tr>
-            <td>&nbsp;</td>
-            <td>
-                <input type="submit" class="btn btn-primary btn-sm" name="submit" value="{% trans %}Add zones{% endtrans %}">
-            </td>
-        </tr>
-    </table>
-</form>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans %}Zones{% endtrans %}</label>
+                <textarea class="form-control form-control-sm" name="domains" rows="10" required>
+                    {% if failed_domains %}{{ failed_domains | join('\n') }}{% endif %}
+                </textarea>
+                <div class="form-text">{% trans %}Type one domain per line{% endtrans %}</div>
+                <div class="invalid-feedback">{% trans %}Provide a domain name(s){% endtrans %}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit" name="submit">
+                <i class="bi bi-floppy"></i> {% trans %}Add zones{% endtrans %}
+            </button>
+        </form>
+    </div>
+</div>

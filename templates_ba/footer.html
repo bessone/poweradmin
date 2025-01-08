@@ -14,7 +14,7 @@
 {{ display_stats | raw }}
 {% endif %}
 
-<footer class="footer mt-auto py-2 bg-light">
+<footer class="footer mt-auto py-2 bg-body-tertiary">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
@@ -30,22 +30,55 @@
             </div>
             <div class="col-md-6 d-flex justify-content-end">
                 {% if show_theme_switcher %}
-                <button class="btn btn-outline-secondary btn-sm" id="theme-switcher">
-                    <i class="bi" id="theme-icon"></i>
-                </button>
+                <!-- <button class="btn btn-outline-secondary btn-sm" id="theme-switcher">
+                    <i class="bi bi-moon" id="theme-icon"></i>
+                </button> -->
+
+                <div class="dropup">
+                    <a href="#" class="nav-link px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-color-mode"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                        <span class="d-light">
+                            <i class="bi bi-brightness-high"></i>
+                        </span>
+                        <span class="d-dark">
+                            <i class="bi bi-moon"></i>
+                        </span>
+                        <span class="d-auto">
+                            <i class="bi bi-circle-half"></i>
+                        </span>
+                        <span class="d-lg-none ms-2">Toggle color mode</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-color-mode" style="--bs-dropdown-min-width: 6rem;"
+                        data-bs-popper="static">
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                <i class="bi bi-brightness-high"></i>
+                                <span class="ms-2">Light</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                                <i class="bi bi-moon"></i>
+                                <span class="ms-2">Dark</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto">
+                                <i class="bi bi-circle-half"></i>
+                                <span class="ms-2">Auto</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
                 {% endif %}
             </div>
-            <div class="col">
-
-<div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" id="darkModeSwitch" checked>
-    <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
-</div>
-
-
-
-
-            </div>
+            <!-- <div class="col d-flex justify-content-end">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="darkModeSwitch" checked>
+                    <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+                </div>
+            </div> -->
         </div>
     </div>
 </footer>
@@ -83,56 +116,97 @@
     const alertList = document.querySelectorAll('.alert')
     const alerts = [...alertList].map(element => new bootstrap.Alert(element))
 
-    /*
-    const themeSwitcher = document.getElementById('theme-switcher');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeStylesheet = document.getElementById('theme-stylesheet');
-    const ifaceStyle = '{{ iface_style }}';
-
-    let currentTheme = localStorage.getItem('theme');
-    if (currentTheme !== 'ignite' && currentTheme !== 'spark') {
-        currentTheme = ifaceStyle || 'ignite';
-    }
-
-    function initializeTheme() {
-        document.body.classList.add(currentTheme);
-        themeIcon.classList.add(currentTheme === 'ignite' ? 'bi-moon' : 'bi-sun');
-        themeStylesheet.href = `style/${currentTheme}.css?time={{ file_version }}`;
-    }
-
-    themeSwitcher.addEventListener('click', () => {
-        const newTheme = currentTheme === 'ignite' ? 'spark' : 'ignite';
-        document.body.classList.replace(currentTheme, newTheme);
-        themeIcon.classList.replace(currentTheme === 'ignite' ? 'bi-moon' : 'bi-sun', newTheme === 'ignite' ? 'bi-moon' : 'bi-sun');
-        themeStylesheet.href = `style/${newTheme}.css?time={{ file_version }}`;
-        localStorage.setItem('theme', newTheme);
-        currentTheme = newTheme;
-    });
-
-    initializeTheme();
-    */
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const htmlElement = document.documentElement;
-        const switchElement = document.getElementById('darkModeSwitch');
+    // document.addEventListener('DOMContentLoaded', (event) => {
+    //     const htmlElement = document.documentElement;
+    //     const switchElement = document.getElementById('darkModeSwitch');
 
-        // Set the default theme to dark if no setting is found in local storage
-        const currentTheme = localStorage.getItem('bsTheme') || 'dark';
-        htmlElement.setAttribute('data-bs-theme', currentTheme);
-        switchElement.checked = currentTheme === 'dark';
+    //     // Set the default theme to dark if no setting is found in local storage
+    //     const currentTheme = localStorage.getItem('bsTheme') || 'dark';
+    //     htmlElement.setAttribute('data-bs-theme', currentTheme);
+    //     switchElement.checked = currentTheme === 'dark';
 
-        switchElement.addEventListener('change', function () {
-            if (this.checked) {
-                htmlElement.setAttribute('data-bs-theme', 'dark');
-                localStorage.setItem('bsTheme', 'dark');
+    //     switchElement.addEventListener('change', function () {
+    //         if (this.checked) {
+    //             htmlElement.setAttribute('data-bs-theme', 'dark');
+    //             localStorage.setItem('bsTheme', 'dark');
+    //         } else {
+    //             htmlElement.setAttribute('data-bs-theme', 'light');
+    //             localStorage.setItem('bsTheme', 'light');
+    //         }
+    //     });
+    // });
+
+    (() => {
+        'use strict';
+
+        const getStoredTheme = () => localStorage.getItem('theme');
+        const setStoredTheme = theme => localStorage.setItem('theme', theme);
+
+        const getPreferredTheme = () => {
+            const storedTheme = getStoredTheme();
+            if (storedTheme) {
+                return storedTheme;
+            }
+
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+
+        const setTheme = theme => {
+            if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
             } else {
-                htmlElement.setAttribute('data-bs-theme', 'light');
-                localStorage.setItem('bsTheme', 'light');
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+        };
+
+        setTheme(getPreferredTheme());
+
+        const showActiveTheme = (theme, focus = false) => {
+            const themeSwitcher = document.querySelector('#bd-color-mode');
+
+            if (!themeSwitcher) {
+                return;
+            }
+
+            const activeThemeIcon = document.querySelector('.theme-icon-active use');
+            const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
+
+            document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+                element.classList.remove('active');
+                element.setAttribute('aria-pressed', 'false');
+            });
+
+            btnToActive.classList.add('active');
+            btnToActive.setAttribute('aria-pressed', 'true');
+
+            if (focus) {
+                themeSwitcher.focus();
+            }
+        };
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            const storedTheme = getStoredTheme();
+            if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                setTheme(getPreferredTheme());
             }
         });
-    });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            showActiveTheme(getPreferredTheme());
+
+            document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const theme = toggle.getAttribute('data-bs-theme-value');
+                    setStoredTheme(theme);
+                    setTheme(theme);
+                    showActiveTheme(theme, true);
+                });
+            });
+        });
+    })();
 </script>
 </body>
 
