@@ -22,8 +22,6 @@
 
 namespace Poweradmin\Domain\Utility;
 
-use Poweradmin\Domain\Service\DnsRecord;
-
 class IpHelper
 {
     public static function getProposedIPv4(string $name, string $zone_name, string $suffix): ?string

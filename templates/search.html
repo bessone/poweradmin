@@ -48,6 +48,13 @@
                        value="true" {% if search_by_reverse %}checked{% endif %}>
                 <label class="form-check-label" for="inlineCheckbox4">{% trans %}Reverse{% endtrans %}</label>
             </div>
+            {% if iface_zone_comments or iface_record_comments %}
+            <div class="form-check form-check-inline">
+                <input type="checkbox" class="form-check-input" name="comments" id="inlineCheckbox5"
+                       value="true" {% if search_by_comments %}checked{% endif %}>
+                <label class="form-check-label" for="inlineCheckbox5">{% trans %}Comments{% endtrans %}</label>
+            </div>
+            {% endif %}
         </div>
     </div>
 </form>
@@ -83,6 +90,11 @@
                     <i class="bi bi-arrow-{{ zone_sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
                 {% endif %}
             </th>
+            {% if iface_zone_comments %}
+            <th>
+                {% trans %}Comment{% endtrans %}
+            </th>
+            {% endif %}
             <th></th>
         </tr>
         </thead>
@@ -93,6 +105,9 @@
             <td>{{ zone['type'] }}</td>
             <td>{{ zone['count_records'] }}</td>
             <td>{{ zone['fullname'] }}</td>
+            {% if iface_zone_comments %}
+                <td>{{ zone['comment'] }}</td>
+            {% endif %}
             <td>
                 {% if edit_permission == 'all' or ((edit_permission == 'own' or edit_permission == 'own_as_client') and zone['user_id'] == user_id) %}
                 <a class="btn btn-outline-primary btn-sm"
@@ -190,6 +205,11 @@
                 <i class="bi bi-arrow-{{ record_sort_direction == 'ASC' ? 'down' : 'up' }}"></i>
                 {% endif %}
             </th>
+            {% if iface_record_comments %}
+            <th>
+                {% trans %}Comment{% endtrans %}
+            </th>
+            {% endif %}
             <th></th>
         </tr>
         </thead>
@@ -202,14 +222,17 @@
             <td>{{ record['content'] }}</td>
             <td>{{ record['ttl'] }}</td>
             <td>{{ record['disabled'] }}</td>
-            <td>
+            {% if iface_record_comments %}
+                <td>{{ record['comment'] }}</td>
+            {% endif %}
+            <td class="col-sm-1">
                 {% if edit_permission == 'all' or ((edit_permission == 'own' or edit_permission == 'own_as_client') and record['user_id'] == user_id) %}
                 <a class="btn btn-outline-primary btn-sm"
                    href="index.php?page=edit_record&domain={{ record['domain_id'] }}&id={{ record['id'] }}">
-                    <i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
+                    <i class="bi bi-pencil-square"></i> {% if not iface_record_comments %}{% trans %}Edit{% endtrans %}{% endif %}</a>
                 <a class="btn btn-outline-danger btn-sm"
                    href="index.php?page=delete_record&domain={{ record['domain_id'] }}&id={{ record['id'] }}">
-                    <i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
+                    <i class="bi bi-trash"></i> {% if not iface_record_comments %}{% trans %}Delete{% endtrans %}{% endif %}</a>
                 {% endif %}
             </td>
         </tr>

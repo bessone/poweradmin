@@ -146,13 +146,26 @@ class EditRecordController extends BaseController
         $dnsRecord->update_soa_serial($zid);
 
         $new_record_info = $dnsRecord->get_record_from_id($_POST["rid"]);
-        $this->logger->log_info(sprintf('client_ip:%s user:%s operation:edit_record'
-            . ' old_record_type:%s old_record:%s old_content:%s old_ttl:%s old_priority:%s'
-            . ' record_type:%s record:%s content:%s ttl:%s priority:%s',
-            $_SERVER['REMOTE_ADDR'], $_SESSION["userlogin"],
-            $old_record_info['type'], $old_record_info['name'], $old_record_info['content'], $old_record_info['ttl'], $old_record_info['prio'],
-            $new_record_info['type'], $new_record_info['name'], $new_record_info['content'], $new_record_info['ttl'], $new_record_info['prio']),
-            $zid);
+        $this->logger->log_info(
+            sprintf(
+                'client_ip:%s user:%s operation:edit_record'
+                . ' old_record_type:%s old_record:%s old_content:%s old_ttl:%s old_priority:%s'
+                . ' record_type:%s record:%s content:%s ttl:%s priority:%s',
+                $_SERVER['REMOTE_ADDR'],
+                $_SESSION["userlogin"],
+                $old_record_info['type'],
+                $old_record_info['name'],
+                $old_record_info['content'],
+                $old_record_info['ttl'],
+                $old_record_info['prio'],
+                $new_record_info['type'],
+                $new_record_info['name'],
+                $new_record_info['content'],
+                $new_record_info['ttl'],
+                $new_record_info['prio']
+            ),
+            $zid
+        );
 
         $this->recordCommentService->updateComment(
             $zid,
@@ -160,14 +173,14 @@ class EditRecordController extends BaseController
             $old_record_info['type'],
             $new_record_info['name'],
             $new_record_info['type'],
-            $_POST['comment'],
+            $_POST['comment'] ?? '',
             $_SESSION['userlogin']
         );
 
         $this->commentSyncService->updateRelatedRecordComments(
             $dnsRecord,
             $new_record_info,
-            $_POST['comment'],
+            $_POST['comment'] ?? '',
             $_SESSION['userlogin']
         );
 
