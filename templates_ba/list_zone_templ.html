@@ -59,20 +59,23 @@
                     {% endif %}
                 </td>
                 <td class="col-sm-1 {% if template['zones_linked'] == '0' %}table-warning{% endif %}">{{ template['zones_linked'] }}</td>
-                {% if (perm_zone_master_add and template['username']) or perm_is_godlike %}
-                <td class="col-sm-2">
+                <td class="col-sm-2 text-end">
+                    {% if (perm_zone_master_add and template['username']) or perm_is_godlike %}
                     <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_zone_templ&id={{ template['id'] }}"><i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
                     <a class="btn btn-outline-danger btn-sm" href="index.php?page=delete_zone_templ&id={{ template['id'] }}"><i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
+                    {% else %}
+                    &nbsp;
+                    {% endif %}
                 </td>
-                {% else %}
-                <td>&nbsp;</td>
-                {% endif %}
+
             </tr>
             {% endfor %}
             </tbody>
 
         </table>
         </div>
-        <a class="btn btn-primary btn-sm" href="index.php?page=add_zone_templ">{% trans %}Add zone template{% endtrans %}</a>
+        <a class="btn btn-primary" href="index.php?page=add_zone_templ">
+            <i class="bi bi-plus-circle"></i> {% trans %}Add zone template{% endtrans %}
+        </a>
     </div>
 </div>

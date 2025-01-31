@@ -23,14 +23,12 @@
             <div class="row pt-3 pb-3">
                 <div class="col-sm-4">
                     <div class="input-group has-validation">
-                        <input type="text" class="form-control form-control-sm" name="query" value="{{ query }}" required>
-                        <button type="submit" class="btn btn-primary btn-sm" name="do_search"><i class="bi bi-search"></i> {% trans %}Search{% endtrans %}</button>
-                        <!-- <input type="submit" class="btn btn-primary btn-sm" name="do_search" value="{% trans %}Search{% endtrans %}"> -->
-                        <div class="input-group-append">
-                            <a href="index.php?page=search" class="btn btn-outline-primary btn-sm" role="button"><i class="bi bi-eraser"></i> {% trans %}Clear{% endtrans %}</a>
-                        </div>
+                        <input type="text" class="form-control" name="query" value="{{ query }}" required>
+                        <button type="submit" class="btn btn-primary" name="do_search"><i class="bi bi-search"></i> {% trans %}Search{% endtrans %}</button>
+                        <a href="index.php?page=search" class="btn btn-outline-primary rounded-end" role="button"><i class="bi bi-eraser"></i> {% trans %}Clear{% endtrans %}</a>
                         <div class="invalid-feedback">{% trans %}Provide a keyword for your search{% endtrans %}</div>
                     </div>
+
                 </div>
                 <div class="col-sm-8 mt-1">
                     <div class="form-check form-check-inline">

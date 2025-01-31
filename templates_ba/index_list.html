@@ -53,6 +53,11 @@
     <li class="list-group-item list-group-item-action">
         <i class="bi bi-people"></i> <a href="index.php?page=users">{% trans %}User administration{% endtrans %}</a>
     </li>
+    {% if permissions['user_is_ueberuser'] and dblog_use == true %}
+    <li class="list-group-item list-group-item-action">
+        <i class="bi bi-list-ul"></i> <a href="index.php?page=list_log_users">{% trans %}User logs{% endtrans %}</a>
+    </li>
+    {% endif %}
     {% if permissions['templ_perm_edit'] %}
     <li class="list-group-item list-group-item-action">
         <i class="bi bi-person-lock"></i> <a href="index.php?page=users">{% trans %}List permission templates{% endtrans %}</a>

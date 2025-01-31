@@ -32,7 +32,11 @@
         {% endif %}
 
         <p>{% trans %}Are you sure?{% endtrans %}</p>
-        <a class="btn btn-sm btn-danger" href="index.php?page=delete_domain&id={{ zone_id }}&confirm=1" data-testid="confirm-delete-zone"><i class="bi bi-trash"></i> {% trans %}Yes{% endtrans %}</a>
-        <a class="btn btn-sm btn-secondary" href="index.php?page=list_zones" data-testid="cancel-delete-zone"><i class="bi bi-arrow-counterclockwise"></i> {% trans %}No{% endtrans %}</a>
+        <a class="btn btn-danger" href="index.php?page=delete_domain&id={{ zone_id }}&confirm=1" data-testid="confirm-delete-zone">
+            <i class="bi bi-trash"></i> {% trans %}Yes{% endtrans %}
+        </a>
+        <a class="btn btn-secondary" href="index.php?page=list_zones" data-testid="cancel-delete-zone">
+            <i class="bi bi-arrow-counterclockwise"></i> {% trans %}No{% endtrans %}
+        </a>
     </div>
 </div>

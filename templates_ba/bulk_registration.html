@@ -15,7 +15,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token }}">
             <div class="mb-3">
                 <label class="form-label">{% trans %}Owner{% endtrans %}</label>
-                <select class="form-select form-select-sm" name="owner">
+                <select class="form-select" name="owner">
                     {% for user in users %}
                     {% if user['id'] == userid %}
                     <option value="{{ user['id'] }}" selected>{{ user['fullname'] }}</option>
@@ -27,7 +27,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">{% trans %}Type{% endtrans %}</label>
-                <select class="form-select form-select-sm" name="dom_type">
+                <select class="form-select" name="dom_type">
                     {% for type in available_zone_types %}
                     {% if type == iface_zone_type_default %}
                     {% set selected = 'selected' %}
@@ -40,7 +40,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">{% trans %}Template{% endtrans %}</label>
-                <select class="form-select form-select-sm" name="zone_template">
+                <select class="form-select" name="zone_template">
                     <option value="none">none</option>
                     {% for zone_template in zone_templates %}
                     <option value="{{ zone_template['id'] }}">{{ zone_template['name'] }}</option>
@@ -49,13 +49,13 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">{% trans %}Zones{% endtrans %}</label>
-                <textarea class="form-control form-control-sm" name="domains" rows="10" required>
+                <textarea class="form-control" name="domains" rows="10" required>
                     {% if failed_domains %}{{ failed_domains | join('\n') }}{% endif %}
                 </textarea>
                 <div class="form-text">{% trans %}Type one domain per line{% endtrans %}</div>
                 <div class="invalid-feedback">{% trans %}Provide a domain name(s){% endtrans %}</div>
             </div>
-            <button class="btn btn-primary btn-sm" type="submit" name="submit">
+            <button class="btn btn-primary" type="submit" name="submit">
                 <i class="bi bi-floppy"></i> {% trans %}Add zones{% endtrans %}
             </button>
         </form>

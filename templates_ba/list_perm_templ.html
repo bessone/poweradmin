@@ -26,8 +26,8 @@
                     <td class="col-sm-2">{{ template['name'] }}</td>
                     <td class="col-sm-3">{{ template['descr'] }}</td>
                     <td class="text-end">
-                        <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_perm_templ&id={{ template['id'] }}"><i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
-                        <a class="btn btn-outline-danger btn-sm" href="index.php?page=delete_perm_templ&id={{ template['id'] }}"><i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
+                        <a class="btn btn-outline-primary" href="index.php?page=edit_perm_templ&id={{ template['id'] }}"><i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
+                        <a class="btn btn-outline-danger" href="index.php?page=delete_perm_templ&id={{ template['id'] }}"><i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -37,7 +37,9 @@
 
         <div>
             {% if templ_perm_add %}
-            <a class="btn btn-primary btn-sm" href="index.php?page=add_perm_templ">{% trans %}Add permission template{% endtrans %}</a>
+            <a class="btn btn-primary" href="index.php?page=add_perm_templ">
+                <i class="bi bi-plus-circle"></i> {% trans %}Add permission template{% endtrans %}
+            </a>
             {% endif %}
         </div>
     </div>

@@ -17,32 +17,37 @@
         </li>
     </ol>
 </nav>
+<div class="card mt-3">
+    <div class="card-header">
+        <h5>{% trans %}Delete zone key{% endtrans %}</h5>
+    </div>
+    <div class="card-body">
+        {% if key_info[5] %}
+        {% set active = 'Yes' %}
+        {% else %}
+        {% set active = 'No' %}
+        {% endif %}
 
-<h5 class="mb-3">{% trans %}Delete zone key{% endtrans %}</h5>
-{% if key_info[5] %}
-{% set active = 'Yes' %}
-{% else %}
-{% set active = 'No' %}
-{% endif %}
+        {% trans %}Domain{% endtrans %}:
+        {% if idn_zone_name %}
+        {{ idn_zone_name }} ({{ domain_name }})
+        {% else %}
+        {{ domain_name }}
+        {% endif %}
+        <br>
+        {% trans %}Id{% endtrans %}: {{ key_info[0] }}<br>
+        {% trans %}Type{% endtrans %}: {{ key_info[1] }}<br>
+        {% trans %}Tag{% endtrans %}: {{ key_info[2] }}<br>
+        {% trans %}Algorithm{% endtrans %}: {{ algorithms[key_info[3]] }}<br>
+        {% trans %}Bits{% endtrans %}: {{ key_info[4] }}<br>
+        {% trans %}Active{% endtrans %}: {{ active|trans }}<br>
 
-{% trans %}Domain{% endtrans %}:
-{% if idn_zone_name %}
-{{ idn_zone_name }} ({{ domain_name }})
-{% else %}
-{{ domain_name }}
-{% endif %}
-<br>
-{% trans %}Id{% endtrans %}: {{ key_info[0] }}<br>
-{% trans %}Type{% endtrans %}: {{ key_info[1] }}<br>
-{% trans %}Tag{% endtrans %}: {{ key_info[2] }}<br>
-{% trans %}Algorithm{% endtrans %}: {{ algorithms[key_info[3]] }}<br>
-{% trans %}Bits{% endtrans %}: {{ key_info[4] }}<br>
-{% trans %}Active{% endtrans %}: {{ active|trans }}
-
-<p class="pt-3"><strong>{% trans %}Are you sure?{% endtrans %}</strong></p>
-<input class="btn btn-primary btn-sm" type="button"
-       onClick="location.href='index.php?page=dnssec_delete_key&id={{ zone_id }}&key_id={{ key_id }}&confirm=1'"
-       value="{% trans %}Yes{% endtrans %}">
-<input class="btn btn-secondary btn-sm" type="button" onClick="location.href='index.php?page=dnssec&id={{ zone_id }}'"
-       value="{% trans %}No{% endtrans %}">
-
+        <p>{% trans %}Are you sure?{% endtrans %}</p>
+        <a class="btn btn-danger" href="index.php?page=dnssec_delete_key&id={{ zone_id }}&key_id={{ key_id }}&confirm=1">
+            <i class="bi bi-trash"></i> {% trans %}Yes{% endtrans %}
+        </a>
+        <a class="btn btn-secondary" href="index.php?page=dnssec&id={{ zone_id }}">
+            <i class="bi bi-arrow-counterclockwise"></i> {% trans %}No{% endtrans %}
+        </a>
+    </div>
+</div>

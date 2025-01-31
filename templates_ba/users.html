@@ -49,12 +49,12 @@
 
                 {% if (user_uid == session_userid and permissions['user_edit_own']) or (user_uid != session_userid and permissions['user_edit_others']) or (permissions['user_is_ueberuser']) %}
                 <tr>
-                    <td><input class="form-control form-control-sm" type="text" name="user[{{ user['uid'] }}][username]" value="{{ user ['username'] }}"></td>
-                    <td><input class="form-control form-control-sm" type="text" name="user[{{ user['uid'] }}][fullname]" value="{{ user ['fullname'] }}"></td>
-                    <td><input class="form-control form-control-sm" type="text" name="user[{{ user['uid'] }}][email]" value="{{ user ['email'] }}"></td>
+                    <td><input class="form-control" type="text" name="user[{{ user['uid'] }}][username]" value="{{ user ['username'] }}"></td>
+                    <td><input class="form-control" type="text" name="user[{{ user['uid'] }}][fullname]" value="{{ user ['fullname'] }}"></td>
+                    <td><input class="form-control" type="text" name="user[{{ user['uid'] }}][email]" value="{{ user ['email'] }}"></td>
                     <td>
                         {% if permissions['user_edit_templ_perm'] %}
-                        <select class="form-select form-select-sm" name="user[{{ user['uid'] }}][templ_id]">
+                        <select class="form-select" name="user[{{ user['uid'] }}][templ_id]">
                             {% for template in perm_templates %}
                             {% if template['id'] == user['tpl_id'] %}
                             {% set selected = 'SELECTED' %}
@@ -93,12 +93,12 @@
 
                     <td class="text-end">
                         <input type="hidden" name="user[{{ user_uid }}][uid]" value="{{ user_uid }}">
-                        <a class="btn btn-outline-primary btn-sm" href="index.php?page=edit_user&id={{ user_uid }}">
+                        <a class="btn btn-outline-primary" href="index.php?page=edit_user&id={{ user_uid }}">
                             <i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}
                         </a>
 
                         {% if user['uid'] != session_userid %}
-                        <a class="btn btn-outline-danger btn-sm" href="index.php?page=delete_user&id={{ user['uid'] }}">
+                        <a class="btn btn-outline-danger" href="index.php?page=delete_user&id={{ user['uid'] }}">
                             <i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}
                         </a>
                         {% endif %}
@@ -121,15 +121,18 @@
             </div>
 
             {% if permissions['user_edit_own'] or permissions['user_edit_others'] %}
-            <button class="btn btn-primary btn-sm" type="submit" name="commit">
+            <button class="btn btn-primary" type="submit" name="commit">
                 <i class="bi bi-floppy"></i> {% trans %}Update{% endtrans %}
             </button>
-            <input type="reset" class="btn btn-secondary btn-sm" name="reset" value="{% trans %}Reset{% endtrans %}">
+            <button class="btn btn-secondary" type="reset" name="reset">
+                <i class="bi bi-arrow-counterclockwise"></i> {% trans %}Reset{% endtrans %}
+            </button>
             {% endif %}
 
             {% if perm_add_new %}
-            <input class="btn btn-primary btn-sm" type="button" name="add_slave"
-                onclick="location.href = 'index.php?page=add_user'" value="{% trans %}Add user{% endtrans %}">
+            <a class="btn btn-primary" type="button" name="add_slave" href="index.php?page=add_user">
+                <i class="bi bi-plus-circle"></i> {% trans %}Add user{% endtrans %}
+            </a>
             {% endif %}
         </form>
     </div>

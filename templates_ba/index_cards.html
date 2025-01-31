@@ -1,4 +1,8 @@
-<h5 class="mb-3">{% trans %}Welcome{% endtrans %} {{ user_name }}</h5>
+<div class="row">
+    <div class="col-12">
+        <h5 class="my-3">{% trans %}Welcome{% endtrans %} {{ user_name }}</h5>
+    </div>
+</div>
 <div class="row">
     {% if permissions['search'] %}
     <div class="col-sm-3 mb-3">
@@ -62,7 +66,7 @@
         <a href="index.php?page=add_zone_master" data-testid="add-master-zone-link">
             <div class="card h-100">
                 <div class="card-body">
-                    <div class="w-100 text-center"><i class="bi bi-hdd-rack display-3"></i></div>
+                    <div class="w-100 text-center"><i class="bi bi-plus-circle display-3"></i></div>
                 </div>
                 <div class="card-footer text-center">
                     {% trans %}Add master zone{% endtrans %}
@@ -153,6 +157,20 @@
             </div>
         </a>
     </div>
+    {% if permissions['user_is_ueberuser'] and dblog_use == true %}
+    <div class="col-sm-3 mb-3">
+        <a href="index.php?page=list_log_users" data-testid="user-logs-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="w-100 text-center"><i class="bi bi-list-ul display-3"></i></div>
+                </div>
+                <div class="card-footer text-center">
+                    {% trans %}User logs{% endtrans %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
     {% if permissions['templ_perm_edit'] %}
     <div class="col-sm-3 mb-3">
         <a href="index.php?page=list_perm_templ" data-testid="list-permission-templates-link">

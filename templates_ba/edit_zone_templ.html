@@ -8,147 +8,138 @@
     </ol>
 </nav>
 
-<h5 class="mb-3">{% trans %}Edit zone template{% endtrans %} "{{templ_details['name']}}"</h5>
-<div>
-    {{ pagination | raw }}
-</div>
+<div class="card">
+    <div class="card-header">
+        <h5>{% trans %}Edit zone template{% endtrans %} "{{templ_details['name']}}"</h5>
+    </div>
+    <div class="card-body">
+        <div>
+            {{ pagination | raw }}
+        </div>
 
-{% if records == "-1" %}
-<div class='text-secondary'>{% trans %}This zone template does not have any records yet.{% endtrans %}</div>
-<br>
-<div><input class="btn btn-primary btn-sm" type="button"
-            onClick="location.href='index.php?page=add_zone_templ_record&id={{zone_templ_id}}'"
-            value="{% trans %}Add record{% endtrans %}">
-</div>
-{% else %}
-<form method="post" action="">
-    <input type="hidden" name="_token" value="{{ csrf_token }}">
-    <table class="table table-striped table-hover table-sm">
-        <tr>
-            <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=name">{% trans %}Name{% endtrans %}</a></th>
-            <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=type">{% trans %}Type{% endtrans %}</a></th>
-            <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=content">{% trans %}Content{% endtrans %}</a></th>
-            <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=prio">{% trans %}Priority{% endtrans %}</a>
-            </th>
-            <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=ttl">{% trans %}TTL{% endtrans %}</a></th>
-            <th>&nbsp;</th>
-        </tr>
-        {% for record in records %}
-        <tr>
-            <td class="col-sm-2">{{record['name']}}</td>
-            <td class="col-sm-1">{{record['type']}}</td>
-            <td class="col-sm-5"><input class="form-control form-control-sm" type="text" name="content" value="{{record['content']}}" disabled></td>
-            {% if (record['type'] == "MX") or (record['type'] == "SRV") %}
-            <td class="col-sm-1">{{record['prio']}}</td>
-            {% else %}
-            <td class="col-sm-1">&nbsp;</td>
-            {% endif %}
-            <td class="col-sm-1">{{record['ttl']}}</td>
-            <td>
-                <input type="hidden" name="record[{{record['id']}}][rid]" value="{{record['id']}}">
-                <a class="btn btn-outline-primary btn-sm"
-                   href="index.php?page=edit_zone_templ_record&id={{record['id']}}&zone_templ_id={{zone_templ_id}}">
-                    <i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
-                <a class="btn btn-outline-danger btn-sm"
-                   href="index.php?page=delete_zone_templ_record&id={{record['id']}}&zone_templ_id={{zone_templ_id}}">
-                    <i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
-            </td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td colspan="6">
-                <input class="btn btn-primary btn-sm" type="button"
-                       onClick="location.href='index.php?page=add_zone_templ_record&id={{zone_templ_id}}'"
-                       value="{% trans %}Add record{% endtrans %}">&nbsp;&nbsp
-            </td>
-        </tr>
-    </table>
-    <input class="btn btn-secondary btn-sm" type="submit" name="update_zones"
-           value="{% trans %}Update zones{% endtrans %}">
+        {% if records == "-1" %}
+        <div class='text-secondary'>{% trans %}This zone template does not have any records yet.{% endtrans %}</div>
+        <br>
+        <div><input class="btn btn-primary btn-sm" type="button"
+                    onClick="location.href='index.php?page=add_zone_templ_record&id={{zone_templ_id}}'"
+                    value="{% trans %}Add record{% endtrans %}">
+        </div>
+        {% else %}
+        <form method="post" action="">
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=name">{% trans %}Name{% endtrans %}</a></th>
+                    <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=type">{% trans %}Type{% endtrans %}</a></th>
+                    <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=content">{% trans %}Content{% endtrans %}</a></th>
+                    <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=prio">{% trans %}Priority{% endtrans %}</a>
+                    </th>
+                    <th><a href="index.php?page=edit_zone_templ&id={{zone_templ_id}}&record_sort_by=ttl">{% trans %}TTL{% endtrans %}</a></th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for record in records %}
+                <tr>
+                    <td class="col-sm-2">{{record['name']}}</td>
+                    <td class="col-sm-1">{{record['type']}}</td>
+                    <td class="col-sm-5"><input class="form-control form-control-sm" type="text" name="content" value="{{record['content']}}" disabled></td>
+                    {% if (record['type'] == "MX") or (record['type'] == "SRV") %}
+                    <td class="col-sm-1">{{record['prio']}}</td>
+                    {% else %}
+                    <td class="col-sm-1">&nbsp;</td>
+                    {% endif %}
+                    <td class="col-sm-1">{{record['ttl']}}</td>
+                    <td>
+                        <input type="hidden" name="record[{{record['id']}}][rid]" value="{{record['id']}}">
+                        <a class="btn btn-outline-primary btn-sm"
+                        href="index.php?page=edit_zone_templ_record&id={{record['id']}}&zone_templ_id={{zone_templ_id}}">
+                            <i class="bi bi-pencil-square"></i> {% trans %}Edit{% endtrans %}</a>
+                        <a class="btn btn-outline-danger btn-sm"
+                        href="index.php?page=delete_zone_templ_record&id={{record['id']}}&zone_templ_id={{zone_templ_id}}">
+                            <i class="bi bi-trash"></i> {% trans %}Delete{% endtrans %}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <a class="btn btn-primary" href="index.php?page=add_zone_templ_record&id={{zone_templ_id}}">
+                <i class="bi bi-plus-circle"></i> {% trans %}Add record{% endtrans %}
+            </a>
 
-    <table>
-        <tr>
-            <td colspan="6"><br><b>{% trans %}Hint:{% endtrans %}</b></td>
-        </tr>
-        <tr>
-            <td colspan="6">{% trans %}The following placeholders can be used in template records{% endtrans %}</td>
-        </tr>
-        <tr>
-            <td colspan="6"><br>&nbsp;&nbsp;&nbsp;&nbsp; * [ZONE] - {% trans %}substituted with current zone name{%
-                endtrans %}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; * [SERIAL] - {% trans %}substituted with current date and 2 numbers{% endtrans
-                %}
-                (YYYYMMDD + 00)<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; * [NS1] - {% trans %}substituted with 1st name server{% endtrans %}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; * [NS2] - {% trans %}substituted with 2nd name server{% endtrans %}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; * [NS3] - {% trans %}substituted with 3rd name server{% endtrans %}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; * [NS4] - {% trans %}substituted with 4th name server{% endtrans %}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; * [HOSTMASTER] - {% trans %}substituted with hostmaster{% endtrans %}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="6"><br><b>{% trans %}Examples:{% endtrans %}</b></td>
-        </tr>
-        <tr>
-            <td colspan="6">{% trans %}To add a subdomain foo in a zonetemplate you would put foo.[ZONE] into the name field.{% endtrans %}<br>
+            <div class="mt-3">
+                <strong>{% trans %}Hint:{% endtrans %}</strong>
+                <br>
+                {% trans %}The following placeholders can be used in template records{% endtrans %}
+                <ul>
+                    <li>[ZONE] - {% trans %}substituted with current zone name{% endtrans %}</li>
+                    <li>[SERIAL] - {% trans %}substituted with current date and 2 numbers{% endtrans %} (YYYYMMDD + 00)</li>
+                    <li>[NS1] - {% trans %}substituted with 1st name server{% endtrans %}</li>
+                    <li>[NS2] - {% trans %}substituted with 2nd name server{% endtrans %}</li>
+                    <li>[NS3] - {% trans %}substituted with 3rd name server{% endtrans %}</li>
+                    <li>[NS4] - {% trans %}substituted with 4th name server{% endtrans %}</li>
+                    <li>[HOSTMASTER] - {% trans %}substituted with hostmaster{% endtrans %}</li>
+                </ul>
+                <br>
+                <strong>{% trans %}Examples:{% endtrans %}</strong>
+                <br>
+                {% trans %}To add a subdomain foo in a zone template you would put foo.[ZONE] into the name field.{% endtrans %}<br>
                 {% trans %}To add a wildcard record put *.[ZONE] in the name field.{% endtrans %}<br>
                 {% trans %}Use just [ZONE] to have the domain itself return a value.{% endtrans %}<br>
-                {% trans %}For the SOA record, place [NS1] [HOSTMASTER] [SERIAL] 28800 7200 604800 86400 in the content field.{% endtrans %}
-            </td>
-        </tr>
-    </table>
-</form>
-<!--<hr>-->
-<!--<form class="needs-validation" method="post" action="" novalidate>-->
-<!--    <input type="hidden" name="_token" value="{{ csrf_token }}">-->
-<!--    <table>-->
-<!--        <tr>-->
-<!--            <td colspan="6"><strong>Save as new template:</strong></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td>{% trans %}Template Name{% endtrans %}</td>-->
-<!--            <td>-->
-<!--                <input class="form-control form-control-sm" type="text" name="templ_name" value="" required>-->
-<!--                <div class="invalid-feedback">{% trans %}Provide a name for your template{% endtrans %}</div>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td>{% trans %}Template Description{% endtrans %}</td>-->
-<!--            <td><input class="form-control form-control-sm" type="text" name="templ_descr" value=""></td>-->
-<!--        </tr>-->
-<!--    </table>-->
-<!--    <input class="btn btn-secondary btn-sm" type="submit" name="save_as" value="{% trans %}Save as template{% endtrans %}">-->
-<!--</form>-->
-{% endif %}
-
-<hr>
-<form class="needs-validation" method="post" action="" novalidate>
-    <input type="hidden" name="_token" value="{{ csrf_token }}">
-    <table>
-        <tr>
-            <td style="vertical-align: top" class="pt-1">{% trans %}Name{% endtrans %}</td>
-            <td>
-                <input class="form-control form-control-sm" type="text" name="templ_name"
-                       value="{{templ_details['name']}}" required>
-                <div class="invalid-feedback">{% trans %}Provide a name for your template{% endtrans %}</div>
-            </td>
-        </tr>
-        <tr>
-            <td>{% trans %}Description{% endtrans %}</td>
-            <td><input class="form-control form-control-sm" type="text" name="templ_descr"
-                       value="{{templ_details['descr']}}"></td>
-        </tr>
-        {% if perm_is_godlike %}
-        <tr>
-            <td colspan="2">
-                <input class="form-check-input" type="checkbox" id="templ_global" name="templ_global" {% if templ_details['owner'] == 0 %}checked{% endif %}>
-                <label for="templ_global" class="form-check-label">
-                    {% trans %}Everyone could use it (global)?{% endtrans %}</label>
-            </td>
-        </tr>
+                {% trans %}For the SOA record, place [NS1] [HOSTMASTER] [SERIAL] 28800 7200 604800 86400 in the content field.{%
+                endtrans %}
+            </div>
+        </form>
+        <hr>
+        <button class="btn btn-warning" type="submit" name="update_zones">
+            <i class="bi bi-exclamation-circle-fill"></i> {% trans %}Update zones{% endtrans %}
+        </button>
+        <!--<hr>-->
+        <!--<form class="needs-validation" method="post" action="" novalidate>-->
+        <!--    <input type="hidden" name="_token" value="{{ csrf_token }}">-->
+        <!--    <table>-->
+        <!--        <tr>-->
+        <!--            <td colspan="6"><strong>Save as new template:</strong></td>-->
+        <!--        </tr>-->
+        <!--        <tr>-->
+        <!--            <td>{% trans %}Template Name{% endtrans %}</td>-->
+        <!--            <td>-->
+        <!--                <input class="form-control form-control-sm" type="text" name="templ_name" value="" required>-->
+        <!--                <div class="invalid-feedback">{% trans %}Provide a name for your template{% endtrans %}</div>-->
+        <!--            </td>-->
+        <!--        </tr>-->
+        <!--        <tr>-->
+        <!--            <td>{% trans %}Template Description{% endtrans %}</td>-->
+        <!--            <td><input class="form-control form-control-sm" type="text" name="templ_descr" value=""></td>-->
+        <!--        </tr>-->
+        <!--    </table>-->
+        <!--    <input class="btn btn-secondary btn-sm" type="submit" name="save_as" value="{% trans %}Save as template{% endtrans %}">-->
+        <!--</form>-->
         {% endif %}
-    </table>
-    <div class="pt-3">
-        <input class="btn btn-primary btn-sm" type="submit" name="edit" value="{% trans %}Update{% endtrans %}">
+        <hr>
+        <form class="needs-validation col-12 col-xxl-4 col-xl-6" method="post" action="" novalidate>
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <div class="mb-3">
+                <label class="form-label">{% trans %}Name{% endtrans %}</label>
+                <input class="form-control" type="text" name="templ_name" value="{{templ_details['name']}}" required>
+                <div class="invalid-feedback">{% trans %}Provide a name for your template{% endtrans %}</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans %}Description{% endtrans %}</label>
+                <input class="form-control" type="text" name="templ_descr" value="{{templ_details['descr']}}">
+            </div>
+            {% if perm_is_godlike %}
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" id="templ_global" name="templ_global" {% if templ_details['owner']==0 %}checked{% endif %}>
+                <label class="form-check-label" for="templ_global">{% trans %}Everyone could use it (global)?{% endtrans %}</label>
+            </div>
+            {% endif %}
+            <button class="btn btn-primary" type="submit" name="edit">
+                <i class="bi bi-floppy"></i> {% trans %}Update{% endtrans %}
+            </button>
+        </form>
     </div>
-</form>
+</div>

@@ -7,9 +7,17 @@
     </ol>
 </nav>
 
-<h5 class="mb-3">{% trans %}Delete zone template{% endtrans %} "{{ templ_name }}"</h5>
-<p>{% trans %}Are you sure?{% endtrans %}</p>
-<input type="button" class="btn btn-primary btn-sm"
-       onClick="location.href='index.php?page=delete_zone_templ&id={{ zone_templ_id }}&confirm=1'" value="{% trans %}Yes{% endtrans %}">
-<input type="button" class="btn btn-secondary btn-sm" onClick="location.href='index.php?page=list_zone_templ'"
-       value="{% trans %}No{% endtrans %}">
+<div class="card mt-3">
+    <div class="card-header">
+        <h5>{% trans %}Delete zone template{% endtrans %} "{{ templ_name }}"</h5>
+    </div>
+    <div class="card-body">
+        <p>{% trans %}Are you sure?{% endtrans %}</p>
+        <a class="btn btn-sm btn-danger" href="index.php?page=delete_zone_templ&id={{ zone_templ_id }}&confirm=1">
+            <i class="bi bi-trash"></i> {% trans %}Yes{% endtrans %}
+        </a>
+        <a class="btn btn-sm btn-secondary" href="index.php?page=list_zone_templ">
+            <i class="bi bi-arrow-counterclockwise"></i> {% trans %}No{% endtrans %}
+        </a>
+    </div>
+</div>

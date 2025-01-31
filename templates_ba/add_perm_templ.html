@@ -15,14 +15,14 @@
         <form class="needs-validation" method="post" action="index.php?page=add_perm_templ" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token }}">
             <div class="col-12 col-xl-4 col-xxl-3">
-                <div class="mb-2">
+                <div class="mb-3">
                     <label for="templ_name" class="form-label">{% trans %}Name{% endtrans %}</label>
-                    <input class="form-control form-control-sm" type="text" id="templ_name" name="templ_name" value="" required>
+                    <input class="form-control" type="text" id="templ_name" name="templ_name" value="" required>
                     <div class="invalid-feedback">{% trans %}Provide a name for your template{% endtrans %}</div>
                 </div>
-                <div class="mb-2">
+                <div class="mb-3">
                     <label for="templ_descr" class="form-label">{% trans %}Description{% endtrans %}</label>
-                    <input class="form-control form-control-sm" type="text" id="templ_descr" name="templ_descr" value="">
+                    <input class="form-control" type="text" id="templ_descr" name="templ_descr" value="">
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
             </table>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-sm" name="commit">
+            <button type="submit" class="btn btn-primary" name="commit">
                 <i class="bi bi-floppy"></i> {% trans %}Add{% endtrans %}
             </button>
         </form>

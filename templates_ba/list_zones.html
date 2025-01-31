@@ -138,19 +138,20 @@
 
             {% if perm_edit == "all" or perm_edit == "own" %}
             {% if count_zones_view != 0 %}
-            <!-- <input type="submit" name="commit" value="{% trans %}Delete zone(s){% endtrans %}" class="btn btn-primary btn-sm btn-danger"> -->
-            <button type="submit" name="commit" class="btn btn-primary btn-sm btn-danger"><i class="bi bi-trash"></i> {% trans %}Delete zone(s){% endtrans %}</button>
+            <button type="submit" name="commit" class="btn btn-primary btn-danger"><i class="bi bi-trash"></i> {% trans %}Delete zone(s){% endtrans %}</button>
             {% endif %}
             {% endif %}
 
             <div class="float-end">
             {% if perm_zone_master_add %}
-            <input class="btn btn-secondary btn-sm" type="button" name="add_master"
-                onclick="location.href = 'index.php?page=add_zone_master'" value="{% trans %}Add master zone{% endtrans %}">
+            <a class="btn btn-primary" name="add_master" href="index.php?page=add_zone_master">
+                <i class="bi bi-plus-circle"></i> {% trans %}Add master zone{% endtrans %}
+            </a>
             {% endif %}
             {% if perm_zone_slave_add %}
-            <input class="btn btn-secondary btn-sm" type="button" name="add_slave"
-                onclick="location.href = 'index.php?page=add_zone_slave'" value="{% trans %}Add slave zone{% endtrans %}">
+            <a class="btn btn-primary" name="add_slave" href="index.php?page=add_zone_slave">
+                <i class="bi bi-plus-circle"></i> {% trans %}Add slave zone{% endtrans %}
+            </a>
             {% endif %}
             </div>
 
