@@ -31,6 +31,7 @@
 
 namespace Poweradmin\Application\Controller;
 
+use Exception;
 use Poweradmin\Application\Service\DnssecProviderFactory;
 use Poweradmin\BaseController;
 use Poweradmin\Domain\Model\DnssecAlgorithmName;
@@ -83,7 +84,7 @@ class DnssecAddKeyController extends BaseController
             $algorithm = $_POST["algorithm"];
 
             // To check the supported DNSSEC algorithms in your build of PowerDNS, run pdnsutil list-algorithms.
-            $valid_algorithm = array('rsasha1', 'rsasha1-nsec3', 'rsasha256', 'rsasha512', 'ecdsa256', 'ecdsa384', 'ed25519', 'ed448');
+            $valid_algorithm = array('rsasha1', 'rsasha1-nsec3-sha1', 'rsasha256', 'rsasha512', 'ecdsa256', 'ecdsa384', 'ed25519', 'ed448');
             if (!in_array($algorithm, $valid_algorithm)) {
                 $this->showError(_('Invalid or unexpected input given.'));
             }
@@ -95,11 +96,15 @@ class DnssecAddKeyController extends BaseController
             $this->validateCsrfToken();
 
             $dnssecProvider = DnssecProviderFactory::create($this->db, $this->getConfig());
-            if ($dnssecProvider->addZoneKey($domain_name, $key_type, $bits, $algorithm)) {
-                $this->setMessage('dnssec', 'success', _('Zone key has been added successfully.'));
-                $this->redirect('index.php', ['page' => 'dnssec', 'id' => $zone_id]);
-            } else {
-                $this->setMessage('dnssec_add_key', "error", _('Failed to add new DNSSEC key.'));
+            try {
+                if ($dnssecProvider->addZoneKey($domain_name, $key_type, $bits, $algorithm)) {
+                    $this->setMessage('dnssec', 'success', _('Zone key has been added successfully.'));
+                    $this->redirect('index.php', ['page' => 'dnssec', 'id' => $zone_id]);
+                } else {
+                    $this->setMessage('dnssec_add_key', 'error', _('Failed to add new DNSSEC key.'));
+                }
+            } catch (Exception $e) {
+                $this->setMessage('dnssec_add_key', 'error', _('An error occurred while adding the DNSSEC key: ') . $e->getMessage());
             }
         }
 
